@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!-- xmlns:th => th 키워드가 정의되어 있는 곳의 주소 -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="" method="post">
+      <input type="text" name="num1" id="" />
+      <label for="">+</label>
+      <input type="text" name="num2" id="" />
+      <button type="submit">계산</button>
+    </form>
+    <ul>
+      <!-- AddDto 클래스 객체지만 앞자리 소문자로 바꿔서 부르기 가능 -->
+      <!-- ? : 값이 null일 수도 있음 -->
+      <li>Num1 : <span th:text="${addDto?.num1}"></span></li>
+      <li th:text="${addDto?.num2}">Num2 :</li>
+      <!-- <li>덧셈결과 : <span th:text="${addDto?.result}"></span></li> -->
+      <li>덧셈결과 : <span th:text="${result}"></span></li>
+    </ul>
+  </body>
+</html>
