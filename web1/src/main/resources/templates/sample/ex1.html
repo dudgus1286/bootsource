@@ -7,5 +7,13 @@
   </head>
   <body>
     <h1>ex1</h1>
+    <p th:text="${result}"></p>
+    <script>
+      // const result = [[${result}]];
+      const result = "[[${result}]]"; // script
+    </script>
+    <script th:inline="javascript">
+      const result1 = "[[${result}]]"; // 문자열로 인식시킴
+    </script>
   </body>
 </html>

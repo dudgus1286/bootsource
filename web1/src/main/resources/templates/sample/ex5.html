@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- header 영역 불러오기 -->
+    <!-- th:insert="경로 주소 :: 경로에서 지정한 영역 이름" -->
+    <div th:insert="/fragments/separate :: header"></div>
+    <!-- 
+        <div>
+            <h1>Fragment Test - header 파일</h1>
+        </div>
+    -->
+    <div th:replace="/fragments/separate :: header"></div>
+    <!-- <h1>Fragment Test - header 파일</h1> -->
+
+    <h1>ex5</h1>
+    <div th:insert="/fragments/separate :: content"></div>
+    <div th:insert="/fragments/separate :: footer"></div>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul>
+      <!-- <li><a href="/sample/ex1">ex1</a></li> -->
+      <!-- 문제가 일어날 수도 있음 -->
+
+      <!-- / 가 앞에 붙어있으면 localhost:8080/ 이후부터 시작 -->
+      <li><a th:href="@{/sample/ex1}">ex1</a></li>
+      <!-- / 가 앞에 없으면 현재 주소에서부터 뒤에만 수정 -->
+      <li><a th:href="@{ex1}">ex1</a></li>
+
+      <!-- <a href="/sample/ex4?param1=data1&param2=data2"> -->
+      <li><a th:href="@{ex4(param1='data1', param2='data2')}">ex4</a></li>
+    </ul>
+  </body>
+</html>
