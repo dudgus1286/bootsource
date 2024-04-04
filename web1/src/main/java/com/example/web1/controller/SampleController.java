@@ -19,14 +19,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /*
  * 어노테이션
+ * @Component : 스프링 컨테이너의 관리가 필요한 모든 객체에 사용
+ * (Component 이름에 기능을 표시한 게 Controller와 Service)
  * @Controller : 컨트롤러 클래스 위에 설정 / 스프링 컨테이너가 해당 클래스의 객체를 생성 후 관리함
+ * @Service : 서비스 클래스 위에 설정 / 스프링 컨테이너가 해당 클래스의 객체를 생성한 후 관리해줌
+ * 
+ * @Autowired : 이미 생성된 객체를 주입해줌
+ * private MemoRepository memoRepository = new MemoRepository() (스프링부트에서는 더이상 안 함)
+ * MemoRepository 객체는 스프링 컨테이너가 생성해서 이미 가지고 있기 때문에
+ * 
  * @RequestMapping(value="", method=) : 경로 지정(옛날버전)
  * @GetMapping("경로") : @RequestMapping 의 GET 간략화 버전
  * @PostMapping("경로") : @RequestMapping 의 POST 간략화 버전
+ * 
  * @RequestParam("변수명")/@RequestParam(value="변수명", defaultValue="없을경우의 기본값")
  *  : request에서 넘어오는 파라메터의 이름을 지정할 때 사용
  * @ModelAttribute("객체한테 붙어줄 이름") : 객체 이름 지정,
  *  : model.addAttribute("이름", 값) 과 동일
+ * RedirectAttributes rttr : 경로에 값 추가 rttr.addAttribute("이름", 값)
  */
 
 // 모든 요청은 컨트롤러에 경로가 있어야 함
