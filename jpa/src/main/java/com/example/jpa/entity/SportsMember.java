@@ -17,11 +17,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @Builder
-@ToString
+@ToString(exclude = "locker")
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class SportsMember {
+public class SportsMember extends BaseEntity {
     @SequenceGenerator(name = "sports_member_seq_gen", sequenceName = "sports_member_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sports_member_seq_gen")
     @Id
