@@ -12,15 +12,24 @@
           <h5>ToDo 추가</h5>
         </div>
         <div class="card-body">
-          <form action="" method="post">
+          <form th:action="@{delete}" method="post">
             <div class="form-group mb-2">
               <label for="title">할 일</label>
-              <input type="text" name="title" id="title" class="form-control" />
+              <input type="text" name="title" id="title" class="form-control" th:value="${dto.title}" />
+            </div>
+            <div class="form-group mb-2">
+              <label for="completed" class="form-check-label">완료</label>
+              <input type="checkbox" name="completed" id="completed" class="form-check-input" th:checked="${dto.completed}" />
             </div>
             <div class="form-group mb-2">
               <label for="completed" class="form-check-label">중요</label>
-              <input type="checkbox" name="completed" id="completed" class="form-check-input" id="completed" />
+              <input type="checkbox" name="important" id="important" class="form-check-input" th:checked="${dto.important}" />
             </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-danger">삭제</button>
+              <a th:href="@{list}" class="btn btn-success">목록</a>
+            </div>
+            <input type="hidden" name="id" id="id" th:value="${dto.id}" />
           </form>
         </div>
       </div>
