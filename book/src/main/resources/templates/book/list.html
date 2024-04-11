@@ -14,14 +14,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row"></th>
-          <td></td>
+        <tr th:each="book : ${list}">
+          <th scope="row" th:text="${book.id}"></th>
+          <td th:text="${book.categoryName}"></td>
           <td>
-            <a class="text-decoration-none text-reset"></a>
+            <a class="text-decoration-none text-reset" th:href="@{read(id=${book.id})}">[[${book.title}]]</a>
           </td>
-          <td></td>
-          <td></td>
+          <td th:text="${book.writer}"></td>
+          <td th:text="${book.publisherName}"></td>
         </tr>
       </tbody>
     </table>
@@ -44,4 +44,12 @@
       </ul>
     </nav>
   </div>
+  <th:block layout:fragment="script">
+    <script>
+      const result = "[[${result}]]";
+      if (result) {
+        alert("아이디 " + result + " 번의 도서 등록에 성공했습니다.");
+      }
+    </script>
+  </th:block>
 </html>
