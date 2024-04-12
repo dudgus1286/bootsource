@@ -17,6 +17,22 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+		<!-- querydsl -->
+		<!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa -->
+		<dependency>
+    		<groupId>com.querydsl</groupId>
+    		<artifactId>querydsl-jpa</artifactId>
+    		<version>5.0.0</version>
+			<classifier>jakarta</classifier>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-apt -->
+		<dependency>
+    		<groupId>com.querydsl</groupId>
+    		<artifactId>querydsl-apt</artifactId>
+    		<version>5.0.0</version>
+			<classifier>jakarta</classifier>
+		</dependency>
+
 		<dependency>
     		<groupId>nz.net.ultraq.thymeleaf</groupId>
     		<artifactId>thymeleaf-layout-dialect</artifactId>

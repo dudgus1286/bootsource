@@ -71,4 +71,21 @@ public class MemoRepositoryTest {
         memoRepository.delete(memo);
         System.out.println("삭제 memo " + memoRepository.findById(24L));
     }
+
+    @Test
+    public void jpqlTest() {
+        // 5보다 작은 메모 조회
+        List<Memo> list1 = memoRepository.findByMnoLessThan(5L);
+        System.out.println(list1.size());
+
+        // 10보다 작은 메모 내림차순 정렬해서 조회
+        List<Memo> list2 = memoRepository.findByMnoLessThanOrderByMnoDesc(10L);
+        System.out.println(list2.size());
+
+        // 50 이상 70 이하 메모 조회
+        List<Memo> list3 = memoRepository.findByMnoGreaterThanEqualAndMnoLessThanEqual(50L, 70L);
+        System.out.println(list3.size());
+        list3 = memoRepository.findByMnoBetween(50L, 70L);
+        System.out.println(list3.size());
+    }
 }

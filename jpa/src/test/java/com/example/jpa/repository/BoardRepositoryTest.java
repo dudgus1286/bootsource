@@ -105,9 +105,17 @@ public class BoardRepositoryTest {
         // list.forEach(System.out::println);
 
         // PageRequest.of(페이지번호, 게시물 수) : 페이지 번호는 0 부터 시작
-        Pageable pageable = PageRequest.of(0, 10);
-        List<Board> list = boardRepository.findByIdGreaterThanOrderByIdDesc(0L,
-                pageable);
-        list.forEach(System.out::println);
+        // Pageable pageable = PageRequest.of(0, 10);
+        // List<Board> list = boardRepository.findByIdGreaterThanOrderByIdDesc(0L,
+        // pageable);
+        // list.forEach(System.out::println);
+
+        /*
+         * 메소드 쿼리문에 , nativeQuery = true 추가 안 하면 오류남
+         * Caused by: java.lang.IllegalArgumentException:
+         * org.hibernate.query.SyntaxException: At 1:7 and token '*', no viable
+         * alternative at input 'select ** from board' [select * from board]
+         */
+        List<Board> list = boardRepository.findList();
     }
 }
