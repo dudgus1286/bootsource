@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.book.dto.BookDto;
-import com.example.book.repository.BookRepository;
+import com.example.book.dto.PageRequestDto;
+import com.example.book.dto.PageResultDto;
+import com.example.book.entity.Book;
 
 import jakarta.transaction.Transactional;
 
@@ -13,21 +15,28 @@ import jakarta.transaction.Transactional;
 public class BookServiceTest {
     @Autowired
     private BookService service;
-    @Autowired
-    private BookRepository bookRepository;
 
+    @Transactional
     @Test
-    public void listTest() {
-        service.getList().forEach(book -> System.out.println(book));
+    public void testList() {
+        PageRequestDto requestDto = PageRequestDto.builder().page(1).size(10).build();
+        PageResultDto<BookDto, Book> pageResultDto = service.getList(requestDto);
+
+        System.out.println("------------------- 페이지 나누기 정보 -------------------");
+        System.out.println("prev " + pageResultDto.isPrev());
+        System.out.println("next " + pageResultDto.isNext());
+        System.out.println("total " + pageResultDto.getTotalPage());
+        System.out.println("pageList " + pageResultDto.getPageList());
+
+        // pageResultDto.getDtoList().forEach(System.out::println);
     }
 
     @Transactional
     @Test
-    public void createTest() {
-        // System.out.println(service.bookCreate(BookDto.builder().title("1").writer("2").categoryName("컴퓨터")
-        // .publisherName("로드북").price(11).salePrice(12).build()));
+    public void testSearchList() {
+        PageRequestDto requestDto = PageRequestDto.builder().page(1).size(10).type("t").keyword("제목").build();
+        PageResultDto<BookDto, Book> pageResultDto = service.getList(requestDto);
 
-        System.out.println(bookRepository.findById(12L).get());
-
+        pageResultDto.getDtoList().forEach(System.out::println);
     }
 }

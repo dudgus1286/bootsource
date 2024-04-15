@@ -14,11 +14,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr th:each="book : ${list}">
+        <tr th:each="book : ${result.dtoList}">
           <th scope="row" th:text="${book.id}"></th>
           <td th:text="${book.categoryName}"></td>
           <td>
-            <a class="text-decoration-none text-reset" th:href="@{read(id=${book.id})}">[[${book.title}]]</a>
+            <a
+              class="text-decoration-none text-reset"
+              th:href="@{read(id=${book.id},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}"
+              >[[${book.title}]]</a
+            >
           </td>
           <td th:text="${book.writer}"></td>
           <td th:text="${book.publisherName}"></td>
@@ -26,29 +30,31 @@
       </tbody>
     </table>
 
-    <a class="btn btn-success" th:href="@{/book/list}">전체목록</a>
+    <a class="btn btn-success" th:href="@{list(page=1)}">전체목록</a>
     <!-- page -->
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
-        <li class="page-item">
-          <a class="page-link">Previous</a>
+        <!-- result.prev 값에 따라 -->
+        <li class="page-item" th:if="${result.prev}">
+          <a class="page-link" th:href="@{list(page=${result.start-1},type=${requestDto.type},keyword=${requestDto.keyword})}">Previous</a>
         </li>
 
-        <li class="page-item">
-          <a class="page-link"></a>
+        <li th:class="'page-item ' + ${result.page == page ? 'active' : ''}" th:each="page : ${result.pageList}">
+          <a class="page-link" th:text="${page}" th:href="@{list(page=${page},type=${requestDto.type},keyword=${requestDto.keyword})}"></a>
         </li>
 
-        <li class="page-item">
-          <a class="page-link">Next</a>
+        <!-- result.next 값에 따라 -->
+        <li class="page-item" th:if="${result.next}">
+          <a class="page-link" th:href="@{list(page=${result.end+1},type=${requestDto.type},keyword=${requestDto.keyword})}">Next</a>
         </li>
       </ul>
     </nav>
   </div>
   <th:block layout:fragment="script">
     <script>
-      const result = "[[${result}]]";
-      if (result) {
-        alert("아이디 " + result + " 번의 도서 등록에 성공했습니다.");
+      const msg = "[[${msg}]]";
+      if (msg) {
+        alert("성공했습니다.");
       }
     </script>
   </th:block>
