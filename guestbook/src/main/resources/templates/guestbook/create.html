@@ -1,5 +1,27 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layouts/layout}">
   <div class="mt-3" layout:fragment="content">
     <h2>GuestBook Create Page</h2>
+    <div>
+      <form action="" method="post" th:object="${guestBookDto}">
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" class="form-control" id="title" name="title" placeholder="Enter Title" th:value="${guestBookDto.title}" />
+          <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+        </div>
+        <div class="mb-3">
+          <label for="content" class="form-label">Content</label>
+          <textarea class="form-control" id="content" name="content" rows="10">[[${guestBookDto.content}]]</textarea>
+          <div class="text-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+        </div>
+        <div class="mb-3">
+          <label for="writer" class="form-label">Writer</label>
+          <input type="text" class="form-control" id="writer" name="writer" placeholder="Enter Writer" th:value="${guestBookDto.writer}" />
+          <div class="text-danger" th:if="${#fields.hasErrors('writer')}" th:errors="*{writer}"></div>
+        </div>
+        <div class="mb-3">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
   </div>
 </html>
