@@ -15,8 +15,9 @@ public class PageRequestDto {
     private int page;
     private int size;
 
-    private String type;
-    private String keyword;
+    // String - 초기화 설정 안 하면 null 임
+    private String type = "";
+    private String keyword = "";
 
     // page 값, size 값이 없을때의 기본값
     public PageRequestDto() {

@@ -2,6 +2,7 @@ package com.example.board.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ import com.example.board.dto.PageResultDto;
 import com.example.board.entity.Board;
 import com.example.board.entity.Member;
 import com.example.board.repository.BoardRepository;
+import com.example.board.repository.MemberRepository;
 import com.example.board.repository.ReplyRepository;
 
 import jakarta.transaction.Transactional;
@@ -28,6 +30,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public PageResultDto<BoardDto, Object[]> getList(PageRequestDto requestDto) {
@@ -78,6 +81,22 @@ public class BoardServiceImpl implements BoardService {
 
         // 부모 삭제
         boardRepository.deleteById(3L);
+    }
+
+    @Override
+    public Long insert(BoardDto boardDto) {
+        Optional<Member> member = memberRepository.findById(boardDto.getWriterEmail());
+
+        if (member.isPresent()) {
+            Board entity = Board.builder()
+                    .title(boardDto.getTitle())
+                    .content(boardDto.getContent())
+                    .writer(member.get())
+                    .build();
+            entity = boardRepository.save(entity);
+            return entity.getBno();
+        }
+        return null;
     }
 
 }

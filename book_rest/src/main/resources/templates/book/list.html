@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+  <div layout:fragment="content" class="container mt-5">
+    <h3>도서 목록</h3>
+
+    <table class="table table-hover mt-2">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">분류</th>
+          <th scope="col">제목</th>
+          <th scope="col">저자</th>
+          <th scope="col">출판사</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="book : ${result.dtoList}">
+          <th scope="row" th:text="${book.id}"></th>
+          <td th:text="${book.categoryName}"></td>
+          <td>
+            <a
+              class="text-decoration-none text-reset"
+              th:href="@{read(id=${book.id},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}"
+              th:data-id="${book.id}"
+              >[[${book.title}]]</a
+            >
+          </td>
+          <td th:text="${book.writer}"></td>
+          <td th:text="${book.publisherName}"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <a class="btn btn-success" th:href="@{list(page=1)}">전체목록</a>
+    <!-- page -->
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <!-- result.prev 값에 따라 -->
+        <li class="page-item" th:if="${result.prev}">
+          <a class="page-link" th:href="@{list(page=${result.start-1},type=${requestDto.type},keyword=${requestDto.keyword})}">Previous</a>
+        </li>
+
+        <li th:class="'page-item ' + ${result.page == page ? 'active' : ''}" th:each="page : ${result.pageList}">
+          <a class="page-link" th:text="${page}" th:href="@{list(page=${page},type=${requestDto.type},keyword=${requestDto.keyword})}"></a>
+        </li>
+
+        <!-- result.next 값에 따라 -->
+        <li class="page-item" th:if="${result.next}">
+          <a class="page-link" th:href="@{list(page=${result.end+1},type=${requestDto.type},keyword=${requestDto.keyword})}">Next</a>
+        </li>
+      </ul>
+    </nav>
+    <!-- 데이터 보여주기 -->
+    <form action="" method="post">
+      <div class="mb-3 row">
+        <label for="category" class="col-sm-2 col-form-label">분류</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="category" name="category" readonly value="" />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="title" class="col-sm-2 col-form-label">제목</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="title" name="title" readonly value="" />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="publisher" class="col-sm-2 col-form-label">출판사</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="publisher" name="publisher" readonly value="" />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="writer" class="col-sm-2 col-form-label">작가</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="writer" name="writer" readonly value="" />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="price" class="col-sm-2 col-form-label">가격</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="price" name="price" readonly value="" />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="salePrice" class="col-sm-2 col-form-label">할인가격</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="salePrice" name="salePrice" readonly value="" />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="createDate" class="col-sm-2 col-form-label">등록일</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="createDate" name="createDate" readonly value="" />
+        </div>
+      </div>
+      <div>
+        <a href="" class="btn btn-primary">삭제</a>
+        <a href="" class="btn btn-secondary">수정</a>
+      </div>
+      <input type="hidden" name="id" id="book_id" />
+    </form>
+    <!-- 데이터 보여주기 -->
+  </div>
+  <th:block layout:fragment="script">
+    <script>
+      const msg = "[[${msg}]]";
+      if (msg) {
+        alert("성공했습니다.");
+      }
+    </script>
+    <script th:src="@{/js/list.js}"></script>
+  </th:block>
+</html>

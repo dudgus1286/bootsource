@@ -42,8 +42,10 @@
           />
         </div>
         <div class="mb-3">
-          <a class="btn btn-primary" th:href="@{modify(bno=${dto.bno})}">Modify</a>
-          <a class="btn btn-info" th:href="@{list}">List</a>
+          <a class="btn btn-primary" th:href="@{modify(bno=${dto.bno},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}"
+            >Modify</a
+          >
+          <a class="btn btn-info" th:href="@{list(page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}">List</a>
         </div>
       </form>
     </div>
