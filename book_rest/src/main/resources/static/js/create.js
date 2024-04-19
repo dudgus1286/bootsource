@@ -24,7 +24,9 @@ document.querySelector("#createForm").addEventListener("submit", (e) => {
   })
     .then((response) => response.text()) // 데이터 입력 성공할 경우 "success" 문자로 반환하기 때문
     .then((data) => {
-      if (data == "success") alert("입력성공");
-      location.href = "/book/list?page=1&type=&keyword=";
+      if (data == "success") {
+        alert("입력성공");
+        location.href = "/book/list?page=1&type=&keyword=";
+      }
     });
 });

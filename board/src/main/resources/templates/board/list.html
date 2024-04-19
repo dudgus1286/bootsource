@@ -61,7 +61,7 @@
         <li th:class="'page-item '" th:each="page : ${result.pageList}">
           <a class="page-link" th:href="@{list(page=${page},type=${requestDto.type},keyword=${requestDto.keyword})}" th:text="${page}"></a>
         </li>
-        <li class="page-item" th:if="${result.prev}">
+        <li class="page-item" th:if="${result.next}">
           <a class="page-link" th:href="@{list(page=${result.end +1},type=${requestDto.type},keyword=${requestDto.keyword})}">Next</a>
         </li>
       </ul>

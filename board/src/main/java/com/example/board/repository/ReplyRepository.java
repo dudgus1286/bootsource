@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import com.example.board.entity.Board;
 import com.example.board.entity.Reply;
 
 import jakarta.transaction.Transactional;
@@ -20,6 +21,5 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     @Query("delete from Reply r where r.board.bno = ?1 ")
     void deleteByBno(Long bno);
 
-    @Query("select r from Reply r where r.board.bno = ?1")
-    List<Reply> findByBno(Long bno);
+    List<Reply> getRepliesByBoardOrderByRno(Board board);
 }
