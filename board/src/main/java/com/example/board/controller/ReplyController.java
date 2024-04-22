@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RequestMapping("/replies")
 @Log4j2
@@ -60,4 +61,10 @@ public class ReplyController {
         return new ResponseEntity<ReplyDto>(service.getReply(rno), HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> putMethodName(@PathVariable("id") String id, @RequestBody ReplyDto replyDto) {
+        log.info("댓글 수정 요청 {} {}", id, replyDto);
+        Long rno = service.update(replyDto);
+        return new ResponseEntity<String>(String.valueOf(rno), HttpStatus.OK);
+    }
 }
