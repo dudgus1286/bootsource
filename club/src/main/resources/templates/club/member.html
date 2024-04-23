@@ -13,7 +13,10 @@
   </head>
   <body>
     <div class="container">
-      <h1>HOME</h1>
+      <h1>MEMBER</h1>
+      <div class="my-3" sec:authorize="isAuthenticated()">
+        <a href="/club/member/logout">LOGOUT</a>
+      </div>
       <div class="my-3">
         <a href="/">HOME</a>
       </div>
@@ -23,6 +26,32 @@
       <div class="my-3">
         <a href="/club/admin">ADMIN</a>
       </div>
+      <!-- thymeleaf 유틸리티 객체 표현 (pom.xml - thymeleaf-extras-springsecurity6 라이브러리 추가)-->
+      <div th:text="${#authentication.name}"></div>
+      <div th:text="${#authentication.authorities}"></div>
+      <div th:text="${#authentication.principal}"></div>
+      <!-- #authentication == sec:authentication -->
+      <h4>thymeleaf</h4>
+      <div sec:authentication="name"></div>
+      <div sec:authentication="authorities"></div>
+      <div sec:authentication="principal"></div>
+
+      <!-- 기본 방식 -->
+      <h4>기본 방식</h4>
+      <h3>
+        권한 확인
+        <!-- 템플릿에서 로그인 정보 가져오기 -->
+        <span sec:authentication="principal.authorities"></span>
+      </h3>
+      <h3>
+        username(ID)
+        <span sec:authentication="principal.username"></span>
+      </h3>
+      <!-- 템플릿에서 권한 정보 가져오기 -->
+      <div sec:authorize="isAuthenticated()">이 부분은 Authenticated 된 사용자만 보는 부분입니다.</div>
+      <div sec:authorize="hasRole('ROLE_ADMIN')">이 부분은 Authenticated 되어 권한이 ADMIN 인 사용자만 보는 부분입니다.</div>
+      <div sec:authorize="hasRole('ROLE_MANAGER')">이 부분은 Authenticated 되어 권한이 MANAGER 인 사용자만 보는 부분입니다.</div>
+      <div sec:authorize="hasRole('ROLE_USER')">이 부분은 Authenticated 되어 권한이 일반 USER 가 보는 부분입니다.</div>
     </div>
   </body>
 </html>
