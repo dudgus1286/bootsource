@@ -26,6 +26,9 @@ public class BoardRepositoryTest {
     @Autowired
     private ReplyRepository replyRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     @Test
     public void testInsert() {
         IntStream.rangeClosed(1, 100).forEach(i -> {

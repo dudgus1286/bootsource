@@ -42,7 +42,11 @@
           />
         </div>
         <div class="mb-3">
-          <a class="btn btn-primary" th:href="@{modify(bno=${dto.bno},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}"
+          <!-- 수정 버튼은 로그인 사용자 == 글 작성자(dto.writerEmail)가 같을 때만 작성 가능 -->
+          <a
+            class="btn btn-primary"
+            th:if="${#authentication.name} == ${dto.writerEmail}"
+            th:href="@{modify(bno=${dto.bno},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}"
             >Modify</a
           >
           <a class="btn btn-info" th:href="@{list(page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}">List</a>
@@ -52,18 +56,20 @@
       <div class="mt-5">
         <hr />
         <!-- 댓글 폼 영역 -->
-        <div class="border p-4">
-          <form action="" method="post" id="replyForm">
+        <!-- 로그인 안 한 상태에서 댓글 작성 폼 감추기 -->
+        <div class="border p-4" sec:authorize="hasRole('ROLE_MEMBER')">
+          <form th:action="@{/replies/new}" method="post" id="replyForm">
             <input type="hidden" name="rno" id="rno" />
             <div class="input-group mb-3">
               <span class="input-group-text">작성자</span>
-              <input type="text" name="replyer" id="replyer" class="form-control" />
+              <input type="text" name="writerName" id="writerName" class="form-control" th:value="${#authentication.principal.memberDto.name}" />
             </div>
             <div class="input-group mb-3">
               <span class="input-group-text">댓글</span>
               <textarea name="reply" id="reply" rows="3" class="form-control"></textarea>
               <button class="btn btn-outline-secondary" type="submit">등록</button>
             </div>
+            <input type="hidden" name="writerEmail" id="writerEmail" th:value="${#authentication.name}" />
           </form>
         </div>
         <!-- 댓글 리스트 영역 -->
@@ -105,14 +111,10 @@
     <script>
       // bno 가져오기
       const bno = "[[${dto.bno}]]";
-
-      // 페이지 정보 가져오기
-      const requestDto = {
-        page: "[[${requestDto.page}]]",
-        type: "[[${requestDto.type}]]",
-        keyword: "[[${requestDto.keyword}]]",
-      };
-      console.log(bno);
+      // const csrfValue = document.querySelector("#replyForm").querySelector("[name='_csrf']").value;
+      const csrfValue = `[[${_csrf.token}]]`;
+      // 현재 로그인 user email
+      const email = "[[${#authentication.name}]]";
     </script>
     <script th:src="@{/js/read.js}"></script>
   </th:block>

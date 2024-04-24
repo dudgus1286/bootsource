@@ -37,12 +37,14 @@ const replyLoaded = () => {
       data.forEach((reply) => {
         result += `<div class="d-flex justify-content-between my-2 border-bottom reply-row" data-rno="${reply.rno}">`;
         result += `<div class="p-3"><img src="/img/default.png" alt="" class="rounded-circle mx-auto d-block" style="width: 60px; height: 60px" /></div>`;
-        result += `<div class="flex-grow-1 align-self-center"><div>${reply.replyer}</div><div>`;
+        result += `<div class="flex-grow-1 align-self-center"><div>${reply.writerName}</div><div>`;
         result += `<span class="fs-5">${reply.text}</span></div>`;
         result += `<div class="text-muted"><span class="small">${formatDate(reply.regDate)}</span></div></div>`;
         result += `<div class="d-flex flex-column align-self-center">`;
-        result += `<div class="mb-2"><button class="btn btn-outline-danger btn-sm">삭제</button></div>`;
-        result += `<div><button class="btn btn-outline-success btn-sm">수정</button></div>`;
+        if (`${email}` == `${reply.writerEmail}`) {
+          result += `<div class="mb-2"><button class="btn btn-outline-danger btn-sm">삭제</button></div>`;
+          result += `<div><button class="btn btn-outline-success btn-sm">수정</button></div>`;
+        }
         result += `</div></div>`;
       });
       replyList.innerHTML = result;
@@ -53,66 +55,69 @@ replyLoaded();
 
 // 새 댓글 등록
 const replyForm = document.querySelector("#replyForm");
+if (replyForm) {
+  replyForm.addEventListener("submit", (e) => {
+    // 새 댓글 등록폼 전송 시 이벤트 중지
+    e.preventDefault();
 
-replyForm.addEventListener("submit", (e) => {
-  // 새 댓글 등록폼 전송 시 이벤트 중지
-  e.preventDefault();
+    const writerEmail = replyForm.querySelector("#writerEmail");
+    const text = replyForm.querySelector("#reply");
+    // 수정인 경우 값이 들어옴
+    const rno = replyForm.querySelector("#rno");
 
-  const replyer = replyForm.querySelector("#replyer");
-  const text = replyForm.querySelector("#reply");
-  // 수정인 경우 값이 들어옴
-  const rno = replyForm.querySelector("#rno");
+    // replyForm 에서 입력할 값 가져오기
+    const reply = {
+      writerEmail: writerEmail.value,
+      text: text.value,
+      bno: bno,
+      rno: rno.value,
+    };
 
-  // replyForm 에서 입력할 값 가져오기
-  const reply = {
-    bno: bno,
-    replyer: replyer.value,
-    text: text.value,
-    rno: rno.value,
-  };
+    if (!rno.value) {
+      // 새 댓글 등록
+      fetch(`/replies/new`, {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+          "X-CSRF-TOKEN": csrfValue,
+        },
+        body: JSON.stringify(reply),
+      })
+        .then((response) => response.text())
+        .then((data) => {
+          console.log(data);
+          if (data) {
+            alert(data + " 번 댓글 등록 성공");
 
-  if (!rno.value) {
-    // 새 댓글 등록
-    fetch(`/replies/new`, {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(reply),
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        console.log(data);
-        if (data) {
-          alert(data + " 번 댓글 등록 성공");
+            // replyForm 내용 제거
+            text.value = "";
+
+            replyLoaded();
+          }
+        });
+    } else {
+      // 기존 댓글 수정
+      fetch(`/replies/${rno.value}`, {
+        method: "put",
+        headers: {
+          "content-type": "application/json",
+          "X-CSRF-TOKEN": csrfValue,
+        },
+        body: JSON.stringify(reply),
+      })
+        .then((response) => response.text())
+        .then((data) => {
+          alert(data + " 번 댓글 수정");
 
           // replyForm 내용 제거
-          replyer.value = "";
           text.value = "";
+          rno.value = "";
 
           replyLoaded();
-        }
-      });
-  } else {
-    // 기존 댓글 수정
-    fetch(`/replies/${rno.value}`, {
-      method: "put",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(reply),
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        alert(data + " 번 댓글 수정");
-
-        // replyForm 내용 제거
-        replyer.value = "";
-        text.value = "";
-        rno.value = "";
-
-        replyLoaded();
-      });
-  }
-});
+        });
+    }
+  });
+}
 
 // 댓글 삭제/수정 버튼 클릭 시 이벤트 전파로 찾아오기
 // 이벤트 전파: 자식 요소에 일어난 이벤트는 상위 요소로 전달됨
@@ -130,6 +135,7 @@ replyList.addEventListener("click", (e) => {
   if (btn.classList.contains("btn-outline-danger")) {
     fetch(`/replies/${rno}`, {
       method: "delete",
+      headers: { "X-CSRF-TOKEN": csrfValue },
     })
       .then((response) => response.text())
       .then((data) => {
@@ -144,7 +150,8 @@ replyList.addEventListener("click", (e) => {
       .then((response) => response.json())
       .then((data) => {
         replyForm.querySelector("#rno").value = data.rno;
-        replyForm.querySelector("#replyer").value = data.replyer;
+        replyForm.querySelector("#writerName").value = data.writerName;
+        replyForm.querySelector("#writerEmail").value = data.writerEmail;
         replyForm.querySelector("#reply").value = data.text;
       });
   }

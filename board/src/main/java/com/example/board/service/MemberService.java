@@ -1,8 +1,10 @@
 package com.example.board.service;
 
 import com.example.board.dto.MemberDto;
-import com.example.board.entity.Member;
 
 public interface MemberService {
-    void register(MemberDto dto);
+    // 회원가입
+    void register(MemberDto insertDto);
+
+    // 회원 수정 , 회원 탈퇴 => default dtoToEntity, entityToDto
 }

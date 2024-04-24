@@ -1,5 +1,6 @@
 package com.example.board.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class BoardController {
     private final BoardService service;
 
+    @PreAuthorize("permitAll()")
     @GetMapping("/list")
     public void getList(@ModelAttribute("requestDto") PageRequestDto requestDto, Model model) {
         log.info("List 요청");
@@ -41,6 +43,8 @@ public class BoardController {
         model.addAttribute("dto", service.getRow(bno));
     }
 
+    // @PreAuthorize 에 조건 추가 가능
+    @PreAuthorize("authentication.name == #dto.writerEmail")
     @PostMapping("/modify")
     public String postModify(BoardDto dto, @ModelAttribute("requestDto") PageRequestDto requestDto,
             RedirectAttributes rttr) {
@@ -54,9 +58,11 @@ public class BoardController {
         return "redirect:/board/list";
     }
 
+    @PreAuthorize("authentication.name == #writerEmail")
     @PostMapping("/remove")
-    public String postRemove(Long bno, @ModelAttribute("requestDto") PageRequestDto requestDto,
+    public String postRemove(Long bno, String writerEmail, @ModelAttribute("requestDto") PageRequestDto requestDto,
             RedirectAttributes rttr) {
+        log.info("Remove 요청 {}", bno);
         service.removeWithReplies(bno);
 
         rttr.addAttribute("page", requestDto.getPage());
@@ -65,15 +71,19 @@ public class BoardController {
         return "redirect:/board/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public void getInsert(BoardDto boardDto, @ModelAttribute("requestDto") PageRequestDto requestDto) {
         log.info("Create form 요청");
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String postInsert(@Valid BoardDto boardDto, BindingResult result,
             @ModelAttribute("requestDto") PageRequestDto requestDto,
             RedirectAttributes rttr) {
+
+        log.info("글 등록 " + boardDto);
 
         if (result.hasErrors()) {
             return "/board/create";

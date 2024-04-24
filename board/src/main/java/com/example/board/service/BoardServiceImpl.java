@@ -77,10 +77,10 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void removeWithReplies(Long bno) {
         // 자식 삭제
-        replyRepository.deleteByBno(3L);
+        replyRepository.deleteByBno(bno);
 
         // 부모 삭제
-        boardRepository.deleteById(3L);
+        boardRepository.deleteById(bno);
     }
 
     @Override

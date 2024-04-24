@@ -21,8 +21,8 @@ public class ReplyDto {
     @NotBlank(message = "댓글 내용을 입력해 주세요")
     private String text;
 
-    @NotBlank(message = "작성자명을 입력해 주세요")
-    private String replyer;
+    private String writerEmail; // 작성자 아이디(email)
+    private String writerName; // 작성자 이름
 
     private Long bno;
 

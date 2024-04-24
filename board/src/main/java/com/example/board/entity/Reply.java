@@ -19,7 +19,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "board")
+@ToString(exclude = { "board", "replyer" })
 @Entity
 public class Reply extends BaseEntity {
     @SequenceGenerator(name = "reply_seq_gen", sequenceName = "reply_seq", allocationSize = 1)
@@ -29,7 +29,9 @@ public class Reply extends BaseEntity {
 
     private String text; // 댓글내용
 
-    private String replyer; // 댓글작성자
+    // private String replyer; // 댓글작성자
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member replyer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
