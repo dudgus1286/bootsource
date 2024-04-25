@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.board.dto.MemberDto;
 import com.example.board.dto.PageRequestDto;
@@ -39,12 +40,19 @@ public class MemberController {
 
     @PostMapping("/register")
     public String postRegister(@ModelAttribute("requestDto") PageRequestDto requestDto, @Valid MemberDto memberDto,
-            BindingResult result) {
+            BindingResult result, RedirectAttributes rttr) {
         log.info("회원가입 요청 {}", memberDto);
         if (result.hasErrors()) {
             return "/member/register";
         }
-        service.register(memberDto);
+        try {
+            service.register(memberDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            rttr.addFlashAttribute("dupEmail", e.getMessage());
+            System.out.println(rttr.getAttribute(e.getMessage()));
+            return "/member/register";
+        }
         return "redirect:/member/login";
     }
 

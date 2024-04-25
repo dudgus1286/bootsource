@@ -3,6 +3,7 @@
     <h2>회원가입</h2>
     <div>
       <form th:action="@{register}" method="post" th:object="${memberDto}" novalidate>
+        <div class="alert alert-danger" th:if="${dupEmail}">[[${dupEmail}]]</div>
         <div class="mb-3">
           <label for="email" class="form-label">이메일</label>
           <input type="email" class="form-control" id="email" name="email" th:value="${memberDto.email}" />

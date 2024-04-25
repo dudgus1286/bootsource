@@ -43,18 +43,19 @@ public class MemberDetailService implements UserDetailsService, MemberService {
     }
 
     @Override
-    public void register(MemberDto insertDto) {
+    public void register(MemberDto insertDto) throws Exception {
         log.info("회원가입 요청 {}", insertDto);
         // 이메일(ID) 중복 검사
         // ID중복 검사 안 하면 이미 있는 계정에 덮어쓰기 될 수도 있음,
         // select 없을 경우 => insert / 존재 시 => update 실행
         // 오류는 아니기 때문에 별도로 중복 검사 기능을 만들어야 함
-        try {
-            // 중복 이메일
-            validateDuplicationMember(insertDto.getEmail());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        // try {
+        // 중복 이메일
+        validateDuplicationMember(insertDto.getEmail());
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // }
 
         Member member = Member
                 .builder()
@@ -66,9 +67,11 @@ public class MemberDetailService implements UserDetailsService, MemberService {
         memberRepository.save(member);
     }
 
-    private void validateDuplicationMember(String email) {
+    private void validateDuplicationMember(String email) throws Exception {
         Optional<Member> member = memberRepository.findById(email);
         if (member.isPresent())
+            // throw: 강제 exception 발생
             throw new IllegalStateException("이미 가입된 회원입니다.");
+        // throw new Exception("이미 가입된 회원입니다.");
     }
 }
