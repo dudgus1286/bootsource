@@ -14,13 +14,17 @@ import com.example.movie.entity.MovieImage;
 public interface MovieService {
     PageResultDto<MovieDto, Object[]> getList(PageRequestDto pageRequestDto);
 
+    MovieDto getRow(Long mno);
+
+    void movieRemove(Long mno);
+
     public default MovieDto entityToDto(Movie movie, List<MovieImage> movieImages, Double avg, Long reviewCnt) {
         MovieDto movieDto = MovieDto.builder()
                 .mno(movie.getMno())
                 .title(movie.getTitle())
                 .createdDate(movie.getCreatedDate())
                 .lastModifiedDate(movie.getLastModifiedDate())
-                .avg(avg)
+                .avg(avg != null ? avg : 0.0d)
                 .reviewCnt(reviewCnt)
                 .build();
 

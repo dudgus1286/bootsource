@@ -19,7 +19,10 @@
             </tr>
           </thead>
           <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-            <tr class="text-gray-700 dark:text-gray-400">
+            <tr class="text-gray-700 dark:text-gray-400" th:each="movie : ${result.dtoList}">
+              <td class="px-4 py-3" th:text="${movie.mno}">
+                <!-- 번호 -->
+              </td>
               <td class="px-4 py-3">
                 <div class="flex items-center text-sm">
                   <!-- 포스터 -->
@@ -27,22 +30,24 @@
                     <img class="object-cover w-full h-full rounded-full" src="" alt="" loading="lazy" />
                     <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                   </div>
-                  <!-- 영화 제목 -->
-                  <div>
-                    <p class="font-semibold">Hans Burger</p>
-                  </div>
                 </div>
               </td>
+              <td class="px-4 py-3">
+                <!-- 영화 제목 -->
+                <a th:href="@{read(mno=${movie.mno}, page=${requestDto.page})}" th:text="${movie.title}"></a>
+              </td>
               <!-- 리뷰 수 -->
-              <td class="px-4 py-3 text-sm">$ 863.45</td>
+              <td class="px-4 py-3 text-sm" th:text="${movie.reviewCnt}"></td>
               <td class="px-4 py-3 text-xs">
                 <!-- 평균 평점 -->
-                <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
-                  Approved
+                <span
+                  class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+                  th:text="${movie.avg}"
+                >
                 </span>
               </td>
               <!-- 작성일 -->
-              <td class="px-4 py-3 text-sm">6/10/2020</td>
+              <td class="px-4 py-3 text-sm" th:text="${#temporals.format(movie.createdDate, 'yyyy-MM-dd')}"></td>
             </tr>
           </tbody>
         </table>
@@ -58,8 +63,12 @@
         <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
           <nav aria-label="Table navigation">
             <ul class="inline-flex items-center">
-              <li>
-                <button class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="Previous">
+              <li th:if="${result.prev}">
+                <a
+                  class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
+                  aria-label="Previous"
+                  th:href="@{list(page=${result.start-1})}"
+                >
                   <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                     <path
                       d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
@@ -67,13 +76,17 @@
                       fill-rule="evenodd"
                     ></path>
                   </svg>
-                </button>
+                </a>
               </li>
-              <li>
-                <button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">1</button>
+              <li th:each="page : ${result.pageList}">
+                <a class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" th:href="@{list(page=${page})}" th:text="${page}"></a>
               </li>
-              <li>
-                <button class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple" aria-label="Next">
+              <li th:if="${result.next}">
+                <a
+                  class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
+                  aria-label="Next"
+                  th:href="@{list(page=${result.end+1})}"
+                >
                   <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
                     <path
                       d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
@@ -81,7 +94,7 @@
                       fill-rule="evenodd"
                     ></path>
                   </svg>
-                </button>
+                </a>
               </li>
             </ul>
           </nav>

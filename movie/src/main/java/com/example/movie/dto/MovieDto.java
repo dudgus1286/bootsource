@@ -26,7 +26,7 @@ public class MovieDto {
     private LocalDateTime lastModifiedDate;
 
     // 화면단에서 필요한 데이터
-    private double avg; // 평점 평균
+    private Double avg; // 평점 평균
     private Long reviewCnt; // 리뷰 개수
 
     // 영화이미지 리스트
