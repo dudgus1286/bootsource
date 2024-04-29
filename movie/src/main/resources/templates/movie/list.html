@@ -101,5 +101,11 @@
         </span>
       </div>
     </div>
+    <th:block layout:fragment="script">
+      <script>
+        const msg = "[[${msg}]]";
+        if (msg) alert(msg + "번이 등록되었습니다");
+      </script>
+    </th:block>
   </div>
 </html>

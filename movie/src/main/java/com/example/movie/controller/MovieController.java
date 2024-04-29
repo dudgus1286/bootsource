@@ -48,4 +48,21 @@ public class MovieController {
         return "redirect:/movie/list";
     }
 
+    @GetMapping("/register")
+    public void getRegister() {
+        log.info("영화 등록 폼 요청");
+    }
+
+    @PostMapping("/register")
+    public String postRegister(MovieDto movieDto, RedirectAttributes rttr) {
+        log.info("영화 등록 {}", movieDto);
+
+        // 서비스 호출
+        Long mno = service.movieInsert(movieDto);
+
+        // mno 넘기기
+        rttr.addFlashAttribute("msg", mno);
+        return "redirect:/movie/list";
+    }
+
 }

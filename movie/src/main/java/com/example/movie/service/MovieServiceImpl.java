@@ -3,6 +3,7 @@ package com.example.movie.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -76,6 +77,26 @@ public class MovieServiceImpl implements MovieService {
         movieImageRepository.deleteByMovie(movie);
         reviewRepository.deleteByMovie(movie);
         movieRepository.delete(movie);
+    }
+
+    @Transactional
+    @Override
+    public Long movieInsert(MovieDto movieDto) {
+        // 영화정보 : title => Movie Entity
+        // 이미지 : MovieImage Entity
+
+        // dto ==> entity
+        Map<String, Object> entityMap = dtoToEntity(movieDto);
+
+        // movie 삽입
+        Movie movie = (Movie) entityMap.get("movie");
+        movieRepository.save(movie);
+
+        // movie image 삽입
+        List<MovieImage> movieImages = (List<MovieImage>) entityMap.get("imgList");
+        movieImages.forEach(image -> movieImageRepository.save(image));
+
+        return movie.getMno();
     }
 
 }
