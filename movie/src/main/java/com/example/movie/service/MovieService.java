@@ -22,6 +22,8 @@ public interface MovieService {
 
     Long movieInsert(MovieDto movieDto);
 
+    Long movieUpdate(MovieDto movieDto);
+
     public default MovieDto entityToDto(Movie movie, List<MovieImage> movieImages, Double avg, Long reviewCnt) {
         MovieDto movieDto = MovieDto.builder()
                 .mno(movie.getMno())
@@ -38,7 +40,7 @@ public interface MovieService {
                     .inum(movieImage.getInum())
                     .uuid(movieImage.getUuid())
                     .imgName(movieImage.getImgName())
-                    .path(movieImage.getImgName())
+                    .path(movieImage.getPath())
                     .build();
         }).collect(Collectors.toList());
 

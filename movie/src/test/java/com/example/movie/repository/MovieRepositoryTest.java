@@ -10,11 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.movie.constant.MemberRole;
+import com.example.movie.dto.PageRequestDto;
 import com.example.movie.entity.Member;
 import com.example.movie.entity.Movie;
 import com.example.movie.entity.MovieImage;
@@ -113,9 +114,16 @@ public class MovieRepositoryTest {
 
     @Test
     public void movieImageListTest() {
-        PageRequest pageRequest = PageRequest.of(0, 10);
+        // PageRequest pageRequest = PageRequest.of(9, 10);
+        PageRequestDto requestDto = PageRequestDto.builder()
+                .type("t")
+                .keyword("Movie")
+                .page(1)
+                .size(10)
+                .build();
 
-        Page<Object[]> list = movieImageRepository.getTotalList(pageRequest);
+        Page<Object[]> list = movieImageRepository.getTotalList(requestDto.getType(), requestDto.getKeyword(),
+                requestDto.getPageable(Sort.by("mno").descending()));
 
         for (Object[] objects : list) {
             System.out.println(Arrays.toString(objects));
@@ -124,9 +132,10 @@ public class MovieRepositoryTest {
 
     @Test
     public void movieGetTest() {
-        List<Object[]> result = movieImageRepository.getMovieRow(1L);
+        List<Object[]> result = movieImageRepository.getMovieRow(102L);
         for (Object[] objects : result) {
             System.out.println(Arrays.toString(objects));
+
         }
     }
 
@@ -142,5 +151,22 @@ public class MovieRepositoryTest {
         // 영화 삭제
         movieRepository.delete(movie);
         ;
+    }
+
+    // fetch = FetchType.LAZY : select review table 만 실행
+    // 단순히 @Transactional 로 처리하면 리뷰가 두 개일 떄 같은 select가 두 번 더 실행됨
+    // ReviewRepository 에서 @EntityGraph(~) 설정하면 join 구문으로 select 가 한 번 실행됨
+    @Transactional
+    @Test
+    public void testFindReview() {
+        Movie movie = Movie.builder().mno(22L).build();
+        List<Review> reviews = reviewRepository.findByMovie(movie);
+
+        reviews.forEach(review -> {
+            System.out.println(review);
+            System.out.println(review.getMember().getEmail());
+            System.out.println(review.getMember().getNickname());
+            System.out.println(review.getMember());
+        });
     }
 }

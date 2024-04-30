@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
-  <th:block layout:fragment="css"> </th:block>
+  <th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/upload.css}"> </th:block>
   <div layout:fragment="content" class="container px-6 mx-auto grid">
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"></h2>
 
@@ -60,7 +61,7 @@
             </button>
           </div>
           <div>
-            <a th:href="@{list(page=${requestDto.page})}">
+            <a th:href="@{list(page=${requestDto.page},type=${requestDto.type}, keyword=${requestDto.keyword})}">
               <button type="button" class="btn btn-primary flex items-center justify-between px-4 py-2 text-sm font-medium leading-5 text-white">
                 목록
               </button>
@@ -72,12 +73,13 @@
       <div class="uploadResult mt-4">
         <!-- 기존에 이미 있는 포스터 보여주기 + 포스터 수정-->
         <ul>
-          <li>
+          <li  th:each="image : ${dto.movieImageDtos}"
+          th:attr="data-file=${image.getImageURL()}, data-name=${image.getImgName()}, data-path=${image.getPath()}, data-uuid=${image.getUuid()}">
             <div>
               <a href="">
-                <img class="block" />
+                <img class="block" th:src="|/upload/display?fileName=${image.getThumbImageURL()}|" />
               </a>
-              <span class="text-sm d-inline-block mx-1"></span>
+              <span class="text-sm d-inline-block mx-1" th:text="${image.imgName}"></span>
               <a href="#">
                 <i class="fa-solid fa-xmark"></i>
               </a>
@@ -89,12 +91,13 @@
       <form method="post" id="actionForm" th:action="@{remove}">
         <input type="hidden" name="mno" th:value="${dto.mno}" />
         <input type="hidden" name="page" th:value="${requestDto.page}" />
-        <input type="hidden" name="type" />
-        <input type="hidden" name="keyword" />
+        <input type="hidden" name="type" th:value="${requestDto.type}"/>
+        <input type="hidden" name="keyword" th:value="${requestDto.keyword}"/>
       </form>
     </div>
   </div>
   <th:block layout:fragment="script">
     <script th:src="@{/js/modify.js}"></script>
+    <script th:src="@{/js/upload.js}"></script>
   </th:block>
 </html>

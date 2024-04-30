@@ -27,14 +27,23 @@
                 <div class="flex items-center text-sm">
                   <!-- 포스터 -->
                   <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
-                    <img class="object-cover w-full h-full rounded-full" src="" alt="" loading="lazy" />
+                    <img
+                      class="object-cover w-full h-full rounded-full"
+                      th:src="|/upload/display?fileName=${movie.movieImageDtos[0].getImageURL()}|"
+                      alt=""
+                      loading="lazy"
+                      th:if="${movie.movieImageDtos.size() > 0 && movie.movieImageDtos[0].path != null}"
+                    />
                     <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                   </div>
                 </div>
               </td>
               <td class="px-4 py-3">
                 <!-- 영화 제목 -->
-                <a th:href="@{read(mno=${movie.mno}, page=${requestDto.page})}" th:text="${movie.title}"></a>
+                <a
+                  th:href="@{read(mno=${movie.mno}, page=${requestDto.page},type=${requestDto.type}, keyword=${requestDto.keyword})}"
+                  th:text="${movie.title}"
+                ></a>
               </td>
               <!-- 리뷰 수 -->
               <td class="px-4 py-3 text-sm" th:text="${movie.reviewCnt}"></td>
@@ -67,7 +76,7 @@
                 <a
                   class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
                   aria-label="Previous"
-                  th:href="@{list(page=${result.start-1})}"
+                  th:href="@{list(page=${result.start-1},type=${requestDto.type}, keyword=${requestDto.keyword})}"
                 >
                   <svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                     <path
@@ -79,13 +88,17 @@
                 </a>
               </li>
               <li th:each="page : ${result.pageList}">
-                <a class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" th:href="@{list(page=${page})}" th:text="${page}"></a>
+                <a
+                  class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                  th:href="@{list(page=${page},type=${requestDto.type}, keyword=${requestDto.keyword})}"
+                  th:text="${page}"
+                ></a>
               </li>
               <li th:if="${result.next}">
                 <a
                   class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
                   aria-label="Next"
-                  th:href="@{list(page=${result.end+1})}"
+                  th:href="@{list(page=${result.end+1},type=${requestDto.type}, keyword=${requestDto.keyword})}"
                 >
                   <svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
                     <path

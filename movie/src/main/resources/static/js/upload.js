@@ -60,3 +60,28 @@ fileInput.addEventListener("change", (e) => {
       showUploadImages(data);
     });
 });
+
+// register, modify 중복 사용
+// form submit 기능 중지
+// uploadResult ul li 태그 요소 가져오기
+const registerForm = document.querySelector("#register-form");
+registerForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const form = e.target;
+  // 첨부파일 정보 수집
+  const attachInfos = document.querySelectorAll(".uploadResult ul li");
+  console.log(attachInfos);
+
+  // 수집된 정보를 폼 태그 자식으로 붙여넣기
+  let result = "";
+  attachInfos.forEach((obj, idx) => {
+    // hidden 3 개 => movieImageDto 객체 하나로 변경
+    result += `<input type='hidden' value ='${obj.dataset.path}' name = 'movieImageDtos[${idx}].path'>`;
+    result += `<input type='hidden' value ='${obj.dataset.uuid}' name = 'movieImageDtos[${idx}].uuid'>`;
+    result += `<input type='hidden' value ='${obj.dataset.name}' name = 'movieImageDtos[${idx}].imgName'>`;
+  });
+  form.insertAdjacentHTML("beforeend", result);
+  console.log(e.target.innerHTML);
+
+  form.submit();
+});

@@ -1,5 +1,8 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
-  <th:block layout:fragment="css"> </th:block>
+  <th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/upload.css}">
+    <link rel="stylesheet" th:href="@{/css/starrr.css}">
+  </th:block>
   <div layout:fragment="content" class="container px-6 mx-auto grid">
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200" th:text="${dto.title}"></h2>
 
@@ -38,14 +41,14 @@
 
         <div class="flex flex-col flex-wrap mb-8 space-y-4 md:flex-row md:items-end md:space-x-5">
           <div>
-            <a th:href="@{/movie/modify(mno=${dto.mno},page=${requestDto.page})}">
+            <a th:href="@{/movie/modify(mno=${dto.mno},page=${requestDto.page},type=${requestDto.type}, keyword=${requestDto.keyword})}">
               <button class="btn btn-success flex items-center justify-between px-4 py-2 text-sm font-medium leading-5 text-white" type="button">
                 <span>수정</span>
               </button>
             </a>
           </div>
           <div class="mx-2">
-            <a th:href="@{/movie/list(page=${requestDto.page})}">
+            <a th:href="@{/movie/list(page=${requestDto.page},type=${requestDto.type}, keyword=${requestDto.keyword})}">
               <button type="button" class="btn btn-primary flex items-center justify-between px-4 py-2 text-sm font-medium leading-5 text-white">
                 목록
               </button>
@@ -54,10 +57,11 @@
         </div>
       </form>
 
+      <!-- 영화 이미지 보여주기 -->
       <div class="uploadResult mb-4">
         <ul>
-          <li data-bs-toggle="modal" data-bs-target="#imgModal">
-            <img class="block" />
+          <li th:each="image : ${dto.movieImageDtos}" data-bs-toggle="modal" data-bs-target="#imgModal" th:attr="data-file=${image.getImageURL()}">
+            <img class="block" th:src="|/upload/display?fileName=${image.getThumbImageURL()}|" />
           </li>
         </ul>
       </div>
@@ -107,6 +111,7 @@
         </label>
         <label class="block text-sm mt-2">
           <span class="text-gray-700 dark:text-gray-400">Grade </span>
+          <!-- 별 모양으로 대체 -->
           <div class="starrr"></div>
         </label>
         <div class="flex mt-6 text-sm">
@@ -117,8 +122,7 @@
       </form>
 
       <!-- 리뷰 리스트 보여주기 -->
-      <div class="mt-2 px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-        <div class="reviewList">
+      <div class="mt-2 px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 reviewList hidden">
           <!-- 리뷰 영역 디자인-->
           <!--    
             <div class="d-flex justify-content-between my-2 border-bottom py-2 review-row" data-rno="1">        
@@ -141,7 +145,6 @@
               </div>
             </div>
             -->
-        </div>
       </div>
       <!--// 리뷰 영역 종료-->
 
@@ -166,10 +169,38 @@
         </div>
       </div>
     </div>
-    <th:block layout:fragment="javascript">
-      <script></script>
+    <th:block layout:fragment="script">
+      <script>
+        // 영화번호 변수에 담기
+        const mno = '[[${dto.mno}]]';
+
+        // 영화명 변수에 담기
+        const title = '[[${dto.title}]]';
+
+        // 리뷰 영역 찾기
+        const reviewList = document.querySelector(".reviewList");
+
+        // 리뷰 개수가 존재한다면 reviewList 클래스명 hidden 제거
+        const reviewCnt = parseInt('[[${dto.reviewCnt}]]');
+        if (reviewCnt > 0) {
+          reviewList.classList.remove("hidden");
+        }
+      </script>
+      <script th:src="@{/js/read.js}"></script>
       <!-- 평점 처리-->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+      <script th:src="@{/js/starrr.js}"></script>
+      <script>
+        // 별 보여주기
+        let grade = 0;
+        $('.starrr').starrr({
+          rating: grade, // 처음에 보여줄 값
+          change: function(e, value){
+            console.log("new rating is "+value);
+            grade = value;
+          }
+        })
+      </script>
     </th:block>
   </div>
 </html>
