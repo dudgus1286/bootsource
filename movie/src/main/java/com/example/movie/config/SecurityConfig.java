@@ -16,7 +16,15 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
+        http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/", "/assets/**", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/movie/list", "/movie/read").permitAll()
+                .requestMatchers("/upload/display").permitAll()
+                .requestMatchers("/reviews/**").permitAll()
+                .anyRequest().authenticated());
+        // login 페이지는 /member/login 경로로 요청
+        http.formLogin(login -> login.loginPage("/member/login").permitAll());
+
         http.csrf(csrf -> csrf.disable()); // csrf 필터 비활성화
         return http.build();
     }
