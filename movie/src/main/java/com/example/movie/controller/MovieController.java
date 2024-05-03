@@ -1,5 +1,6 @@
 package com.example.movie.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -58,6 +59,7 @@ public class MovieController {
         log.info("영화 등록 폼 요청");
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public String postRegister(MovieDto movieDto, @ModelAttribute("requestDto") PageRequestDto pageRequestDto,
             RedirectAttributes rttr) {
@@ -68,10 +70,10 @@ public class MovieController {
 
         // mno 넘기기
         rttr.addFlashAttribute("msg", mno);
-        // rttr.addAttribute("page", pageRequestDto.getPage());
-        // rttr.addAttribute("size", pageRequestDto.getSize());
-        // rttr.addAttribute("type", pageRequestDto.getType());
-        // rttr.addAttribute("keyword", pageRequestDto.getKeyword());
+        rttr.addAttribute("page", pageRequestDto.getPage());
+        rttr.addAttribute("size", pageRequestDto.getSize());
+        rttr.addAttribute("type", pageRequestDto.getType());
+        rttr.addAttribute("keyword", pageRequestDto.getKeyword());
         return "redirect:/movie/list";
     }
 
