@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,8 +50,10 @@ public class ReviewControllder {
         return new ResponseEntity<>(reviewNo, HttpStatus.OK);
     }
 
+    @PreAuthorize("authentication.name == #email")
     @DeleteMapping("/{mno}/{reviewNo}")
-    public ResponseEntity<Long> deleteReview(@PathVariable("mno") Long mno, @PathVariable("reviewNo") Long reviewNo) {
+    public ResponseEntity<Long> deleteReview(@PathVariable("mno") Long mno, @PathVariable("reviewNo") Long reviewNo,
+            String email) {
         log.info("리뷰 삭제 요청 {}", reviewNo);
         service.removeReview(reviewNo);
         return new ResponseEntity<>(reviewNo, HttpStatus.OK);
@@ -64,6 +67,7 @@ public class ReviewControllder {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    @PreAuthorize("authentication.name == #reviewDto.email")
     @PutMapping("/{mno}/{reviewNo}")
     public ResponseEntity<Long> putReview(@PathVariable("mno") Long mno, @PathVariable("reviewNo") Long reviewNo,
             @RequestBody ReviewDto reviewDto) {

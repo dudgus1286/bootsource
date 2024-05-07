@@ -42,13 +42,21 @@ public interface ReviewService {
         Member member = Member.builder().mid(dto.getMid()).build();
         Movie movie = Movie.builder().mno(dto.getMno()).build();
 
-        Review entity = Review.builder()
-                .reviewNo(dto.getReviewNo())
-                .grade(dto.getGrade())
-                .text(dto.getText())
-                .member(member)
-                .movie(movie)
-                .build();
-        return entity;
+        // Review entity =
+        // Review.builder()
+        // .reviewNo(dto.getReviewNo())
+        // .grade(dto.getGrade())
+        // .text(dto.getText())
+        // .member(member)
+        // .movie(movie)
+        // .build();
+        Review review = new Review();
+        review.setReviewNo(dto.getReviewNo());
+        review.setText(dto.getText());
+        review.setGrade(dto.getGrade());
+        review.setMember(member);
+        review.setCreatedDate(dto.getCreatedDate());
+        review.setMovie(movie);
+        return review;
     }
 }
